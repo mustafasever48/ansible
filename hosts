@@ -1,6 +1,7 @@
-hosts:
-   hosts:
-     test:
-        ansible_host: ansibletestms.northeurope.cloudapp.azure.com
-        ansible_ssh_user: azureuser
-        ansible_ssh_private_key_file: /home/mustafa/.ssh/sshadmin.pem  
+testgroup:
+  hosts:
+    ubuntu:
+      ansible_host: ansibletestms.northeurope.cloudapp.azure.com
+      ansible_ssh_user: azureuser
+      ansible_ssh_private_key_file: /home/mustafa/.ssh/sshadmin.pem  
+
