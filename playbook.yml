@@ -1,0 +1,47 @@
+- hosts: hosts
+  name: Deploy Docker Containers
+  become: yes
+  tasks:
+    - name: Install Docker on Debian
+      apt:
+        name: docker.io
+        state: present
+      when: "ansible_os_family == 'Debian'"
+    - name: Create Isolated Docker Network for Web Container
+      command: >
+        docker network create
+        --driver bridge
+        --subnet 182.18.0.0/30
+        web-server-network
+
+    - name: Create Isolated Docker Network for FTP Container
+      command: >
+        docker network create
+        --driver bridge
+        --subnet 182.18.0.4/30
+        ftp-server-network
+
+    - name: Create Docker Volume
+      command: docker volume create --name my-db-volume
+
+    - name: Start Apache Container
+      docker_container:
+        name: apache_container
+        image: httpd:latest
+        ports:
+          - "80:80"
+        state: started
+        networks:
+          - name: web-server-network
+
+    - name: Start FTP Container
+      docker_container:
+        name: ftp_container
+        image: stilliard/pure-ftpd:latest
+        ports:
+          - "21:21"
+        state: started
+        networks:
+          - name: ftp-server-network
+        volumes:
+          - my-db-volume:/etc/pure-ftpd/passwd
