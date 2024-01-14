@@ -1,12 +1,12 @@
 - hosts: hosts
   name: Deploy Docker Containers
-  become: yes
+  become: yes                                                  #or “true”, enable privilege escalation or take administrator rights for ansible in server
   tasks:
     - name: Install Docker on Debian
       apt:
         name: docker.io
-        state: present
-      when: "ansible_os_family == 'Debian'"
+        state: present                                         #Install Docker if not already installed
+      when: "ansible_os_family == 'Debian'"                    #Docker installation for Debian-based systems
     - name: Create Isolated Docker Network for Web Container
       command: >
         docker network create
